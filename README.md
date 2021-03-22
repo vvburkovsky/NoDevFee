@@ -1,6 +1,6 @@
 ## Usage
 
-- Launching Phoenix Minner
+- Launching Phoenix Miner
 - Launching NoDevFee via Command Prompt with your target wallet as argument
 
 ```bash
