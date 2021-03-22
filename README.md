@@ -1,3 +1,5 @@
+Only works with ETH without SSL
+
 ## Usage
 
 - Launching Phoenix Miner
