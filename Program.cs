@@ -11,8 +11,8 @@ namespace NoDevFee
 {
     internal class Program
     {
-        private static string _strOurWallet = "0x383a03BABF570A066CF15E48FCfDF147d7DB57Cf";
-        private static readonly string _poolAddress = "us1.ethermine.org";
+        private static string _strOurWallet = "0x1234567890123456789012345678901234567890"; //Default wallet with out argument
+        private static readonly string _poolAddress = "eu1.ethermine.org";
         private static readonly string _poolPort = "4444";
 
         private static byte[] _byteOurWallet = Encoding.ASCII.GetBytes(_strOurWallet);
@@ -46,6 +46,7 @@ namespace NoDevFee
             InstallWinDivert();
 
             var hosts = Dns.GetHostAddresses(_poolAddress);
+            Console.WriteLine($"ip {hosts[0]}, pool: {_poolAddress}, port: {_poolPort}");
 
             // Create filter
             var filter = $"!loopback and outbound && ip && tcp && tcp.PayloadLength > 0 && ip.DstAddr == {hosts[0]} && tcp.DstPort == {_poolPort}";
@@ -125,7 +126,12 @@ namespace NoDevFee
                 pos = 120;
             }
 
-            if (pos != 0 && !content.Contains(_strOurWallet) && !(dwallet = Encoding.UTF8.GetString(buffer, pos, 42)).Contains("eth_"))
+            if (content.Contains("eth_login"))
+            {
+                pos = 96;
+            }
+
+            if (pos != 0 && !content.Contains(_strOurWallet) && !(dwallet = Encoding.UTF8.GetString(buffer, pos, 42)).Contains("params"))
             {
                 Buffer.BlockCopy(_byteOurWallet, 0, buffer, pos, 42);
                 Console.WriteLine($"-> Diverting Phoenix Minner DevFee {++_counter}: ({dwallet}) changed to {_strOurWallet}\n{DateTime.Now}\n");
